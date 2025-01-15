@@ -1,0 +1,14 @@
+{
+    "name": "project-name",
+    "version": "1.0.0",
+    "description": "A WebDriverIO cross-browser testing project",
+    "scripts": {
+      "test": "wdio wdio.conf.js"
+    },
+    "devDependencies": {
+      "@wdio/cli": "^8.0.0",
+      "@wdio/mocha-framework": "^8.0.0",
+      "@wdio/spec-reporter": "^8.0.0",
+      "@wdio/selenium-standalone-service": "^8.0.0"
+    }
+}
