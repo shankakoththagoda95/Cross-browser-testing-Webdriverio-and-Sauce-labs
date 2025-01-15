@@ -1,0 +1,54 @@
+stages:
+  - install
+  - test
+
+variables:
+  NODE_ENV: test
+  CHROME_BIN: "/usr/bin/google-chrome-stable"
+
+cache:
+  paths:
+    - node_modules/
+
+install_dependencies:
+  stage: install
+  image: node:18
+  script:
+    - echo "Installing dependencies..."
+    - npm install --global npm # Ensure npm is installed globally
+    - npm install --save-dev @wdio/cli @wdio/mocha-framework @wdio/spec-reporter @wdio/allure-reporter @wdio/junit-reporter
+    - echo "Dependencies installed."
+
+run_chrome_tests:
+  stage: test
+  image: selenium/standalone-chrome
+  services:
+    - selenium/standalone-chrome
+  script:
+    - echo "Running Chrome WebDriverIO tests..."
+    - npx wdio wdio.conf.js --browser=chrome
+  artifacts:
+    when: always
+    paths:
+      - allure-results/ # Ensure Allure results are uploaded
+      - junit-results/  # Ensure JUnit results are uploaded
+    reports:
+      junit:
+        - junit-results/junit-results.xml
+
+run_firefox_tests:
+  stage: test
+  image: selenium/standalone-firefox
+  services:
+    - selenium/standalone-firefox
+  script:
+    - echo "Running Firefox WebDriverIO tests..."
+    - npx wdio wdio.conf.js --browser=firefox
+  artifacts:
+    when: always
+    paths:
+      - allure-results/ # Ensure Allure results are uploaded
+      - junit-results/  # Ensure JUnit results are uploaded
+    reports:
+      junit:
+        - junit-results/junit-results.xml
